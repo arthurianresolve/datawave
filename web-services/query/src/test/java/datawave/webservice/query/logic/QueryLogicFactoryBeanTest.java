@@ -32,6 +32,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import datawave.core.query.logic.BaseQueryLogic;
 import datawave.core.query.logic.QueryLogic;
+import datawave.microservice.query.logic.config.QueryLogicFactoryProperties;
 import datawave.security.authorization.DatawavePrincipal;
 import datawave.security.authorization.DatawaveUser;
 import datawave.security.authorization.DatawaveUser.UserType;
@@ -44,7 +45,7 @@ public class QueryLogicFactoryBeanTest extends EasyMockSupport {
     QueryLogicFactoryImpl bean = new QueryLogicFactoryImpl();
 
     @Mock
-    QueryLogicFactoryConfiguration altFactoryConfig;
+    QueryLogicFactoryProperties altFactoryProperties;
 
     @Mock
     DatawavePrincipal altPrincipal;
@@ -54,7 +55,7 @@ public class QueryLogicFactoryBeanTest extends EasyMockSupport {
 
     BaseQueryLogic<?> logic;
 
-    private QueryLogicFactoryConfiguration factoryConfig = null;
+    private QueryLogicFactoryProperties factoryProperties = null;
     private EJBContext ctx;
     private DatawavePrincipal principal = null;
 
@@ -68,9 +69,9 @@ public class QueryLogicFactoryBeanTest extends EasyMockSupport {
         ClassPathXmlApplicationContext queryFactory = new ClassPathXmlApplicationContext();
         queryFactory.setConfigLocation("TestQueryLogicFactory.xml");
         queryFactory.refresh();
-        factoryConfig = queryFactory.getBean(QueryLogicFactoryConfiguration.class.getSimpleName(), QueryLogicFactoryConfiguration.class);
+        factoryProperties = queryFactory.getBean(QueryLogicFactoryProperties.class.getSimpleName(), QueryLogicFactoryProperties.class);
 
-        Whitebox.setInternalState(bean, QueryLogicFactoryConfiguration.class, factoryConfig);
+        Whitebox.setInternalState(bean, QueryLogicFactoryProperties.class, factoryProperties);
         Whitebox.setInternalState(bean, ClassPathXmlApplicationContext.class, queryFactory);
 
         ctx = createMock(EJBContext.class);
@@ -102,7 +103,7 @@ public class QueryLogicFactoryBeanTest extends EasyMockSupport {
         Collection<String> roles = Arrays.asList("Monkey King", "Monkey Queen");
 
         // Set expectations
-        QueryLogicFactoryConfiguration qlfc = new QueryLogicFactoryConfiguration();
+        QueryLogicFactoryProperties qlfc = new QueryLogicFactoryProperties();
         qlfc.setMaxPageSize(25);
         qlfc.setPageByteTrigger(1024L);
         this.logic.setCurrentUser(altPrincipal);
@@ -116,7 +117,7 @@ public class QueryLogicFactoryBeanTest extends EasyMockSupport {
         // Run the test
         replayAll();
         QueryLogicFactoryImpl subject = new QueryLogicFactoryImpl();
-        Whitebox.getField(QueryLogicFactoryImpl.class, "queryLogicFactoryConfiguration").set(subject, factoryConfig);
+        Whitebox.getField(QueryLogicFactoryImpl.class, "queryLogicFactoryProperties").set(subject, factoryProperties);
         Whitebox.getField(QueryLogicFactoryImpl.class, "applicationContext").set(subject, this.applicationContext);
         QueryLogic<?> result1 = subject.getQueryLogic(queryName, this.altPrincipal);
         verifyAll();
@@ -132,7 +133,7 @@ public class QueryLogicFactoryBeanTest extends EasyMockSupport {
         Collection<String> roles = Arrays.asList("Monkey King", "Monkey Queen");
 
         // Set expectations
-        QueryLogicFactoryConfiguration qlfc = new QueryLogicFactoryConfiguration();
+        QueryLogicFactoryProperties qlfc = new QueryLogicFactoryProperties();
         qlfc.setMaxPageSize(25);
         qlfc.setPageByteTrigger(1024L);
 
@@ -152,7 +153,7 @@ public class QueryLogicFactoryBeanTest extends EasyMockSupport {
         // Run the test
         replayAll();
         QueryLogicFactoryImpl subject = new QueryLogicFactoryImpl();
-        Whitebox.getField(QueryLogicFactoryImpl.class, "queryLogicFactoryConfiguration").set(subject, qlfc);
+        Whitebox.getField(QueryLogicFactoryImpl.class, "queryLogicFactoryProperties").set(subject, qlfc);
         Whitebox.getField(QueryLogicFactoryImpl.class, "applicationContext").set(subject, this.applicationContext);
         QueryLogic<?> result1 = subject.getQueryLogic(queryName, this.altPrincipal);
         verifyAll();
@@ -191,12 +192,12 @@ public class QueryLogicFactoryBeanTest extends EasyMockSupport {
         logicClasses.put("TestQuery", this.logic);
         expect(this.applicationContext.getBeansOfType(QueryLogic.class)).andReturn(logicClasses);
         this.logic.setLogicName("TestQuery");
-        expect(this.altFactoryConfig.hasLogicMap()).andReturn(false);
+        expect(this.altFactoryProperties.getQueryLogicsByName()).andReturn(new HashMap<>());
 
         // Run the test
         replayAll();
         QueryLogicFactoryImpl subject = new QueryLogicFactoryImpl();
-        Whitebox.getField(QueryLogicFactoryImpl.class, "queryLogicFactoryConfiguration").set(subject, this.altFactoryConfig);
+        Whitebox.getField(QueryLogicFactoryImpl.class, "queryLogicFactoryProperties").set(subject, this.altFactoryProperties);
         Whitebox.getField(QueryLogicFactoryImpl.class, "applicationContext").set(subject, this.applicationContext);
         List<QueryLogic<?>> result1 = subject.getQueryLogicList();
         verifyAll();

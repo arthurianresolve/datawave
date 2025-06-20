@@ -82,6 +82,7 @@ import datawave.microservice.query.QueryImpl;
 import datawave.microservice.query.QueryParameters;
 import datawave.microservice.query.QueryPersistence;
 import datawave.microservice.query.config.QueryExpirationProperties;
+import datawave.microservice.query.lookup.LookupProperties;
 import datawave.microservice.querymetric.QueryMetric;
 import datawave.microservice.querymetric.QueryMetricFactory;
 import datawave.microservice.querymetric.QueryMetricFactoryImpl;
@@ -104,7 +105,6 @@ import datawave.webservice.query.cache.QueryCache;
 import datawave.webservice.query.cache.QueryTraceCache;
 import datawave.webservice.query.cache.QueryTraceCache.CacheListener;
 import datawave.webservice.query.cache.QueryTraceCache.PatternWrapper;
-import datawave.webservice.query.configuration.LookupUUIDConfiguration;
 import datawave.webservice.query.exception.BadRequestQueryException;
 import datawave.webservice.query.exception.DatawaveErrorCode;
 import datawave.webservice.query.exception.NoResultsQueryException;
@@ -153,7 +153,7 @@ public class ExtendedQueryExecutorBeanTest {
     GenericQueryConfiguration genericConfiguration;
 
     @Mock
-    LookupUUIDConfiguration lookupUUIDConfiguration;
+    LookupProperties lookupProperties;
 
     @Mock
     LookupUUIDUtil lookupUUIDUtil;
@@ -3087,22 +3087,22 @@ public class ExtendedQueryExecutorBeanTest {
         // Set expectations
         expect(this.traceCache.putIfAbsent(isA(String.class), (Multimap) notNull())).andReturn(null);
         this.traceCache.addListener(isA(CacheListener.class));
-        expect(this.lookupUUIDConfiguration.getUuidTypes()).andReturn(null);
-        expect(this.lookupUUIDConfiguration.getBeginDate()).andReturn("not a date");
-        expect(this.lookupUUIDConfiguration.getBatchLookupUpperLimit()).andReturn(0);
-        expect(this.lookupUUIDConfiguration.getTagCloudLookupUpperLimit()).andReturn(0);
-        expect(this.lookupUUIDConfiguration.getContentLookupTypes()).andReturn(Collections.emptyMap());
+        expect(this.lookupProperties.getUuidTypes()).andReturn(null);
+        expect(this.lookupProperties.getBeginDate()).andReturn("not a date");
+        expect(this.lookupProperties.getBatchLookupUpperLimit()).andReturn(0);
+        expect(this.lookupProperties.getTagCloudLookupUpperLimit()).andReturn(0);
+        expect(this.lookupProperties.getContentLookupTypes()).andReturn(Collections.emptyMap());
         expect(this.context.getCallerPrincipal()).andReturn(this.principal).anyTimes();
-        LookupUUIDConfiguration tmpCfg = new LookupUUIDConfiguration();
+        LookupProperties tmpCfg = new LookupProperties();
         tmpCfg.setColumnVisibility("PUBLIC");
-        expect(this.lookupUUIDConfiguration.optionalParamsToMap()).andDelegateTo(tmpCfg);
+        expect(this.lookupProperties.optionalParamsToMap()).andDelegateTo(tmpCfg);
 
         // Run the test
         PowerMock.replayAll();
         QueryExecutorBean subject = new QueryExecutorBean();
         setInternalState(subject, EJBContext.class, context);
         setInternalState(subject, QueryTraceCache.class, traceCache);
-        setInternalState(subject, LookupUUIDConfiguration.class, lookupUUIDConfiguration);
+        setInternalState(subject, LookupProperties.class, lookupProperties);
         setInternalState(subject, QueryLogicFactory.class, queryLogicFactory);
         setInternalState(subject, QueryExpirationProperties.class, queryExpirationConf);
         setInternalState(subject, QueryMetricFactory.class, new QueryMetricFactoryImpl());

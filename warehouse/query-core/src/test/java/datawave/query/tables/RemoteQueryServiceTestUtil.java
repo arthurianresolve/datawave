@@ -294,6 +294,7 @@ public class RemoteQueryServiceTestUtil extends RemoteServiceUtil {
                     assertEquals(expectedCount, events.size());
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 caught.set(true);
                 exception = e;
                 return;

@@ -2,6 +2,7 @@ package datawave.query.language.parser.jexl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import datawave.query.Constants;
 import datawave.query.data.UUIDType;
@@ -37,6 +38,10 @@ public class LuceneToJexlUUIDQueryParser extends LuceneToJexlQueryParser {
 
     public void setUuidTypes(List<UUIDType> uuidTypes) {
         this.uuidTypes = uuidTypes;
+    }
+
+    public void setUuidTypeMap(Map<String,UUIDType> uuidTypes) {
+        this.uuidTypes = new ArrayList<>(uuidTypes.values());
     }
 
     private boolean validUUIDSelectorNode(QueryNode node) {

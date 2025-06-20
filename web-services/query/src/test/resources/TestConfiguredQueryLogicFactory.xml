@@ -21,9 +21,8 @@
 		</property>
 	</bean>
 
-
-	<bean id="QueryLogicFactoryConfiguration" class="datawave.webservice.query.logic.QueryLogicFactoryConfiguration">
-		<property name="logicMap" ref="MYMAP"/>
+	<bean id="QueryLogicFactoryProperties" class="datawave.microservice.query.logic.config.QueryLogicFactoryProperties">
+		<property name="queryLogicsByName" ref="MYMAP"/>
 	</bean>
 
 	<bean id="DEFAULT" class="org.springframework.beans.factory.config.MapFactoryBean">

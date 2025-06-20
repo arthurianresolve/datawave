@@ -166,6 +166,8 @@ public class RemoteEventQueryLogicIT {
 
         // only allow a single max connection
         remoteConfig.setMaxConnections(1);
+        // disable use of the retry handler
+        remoteConfig.setRetryCount(0);
 
         // patch in the forever handler which will block until its unlocked
         HttpHandler foreverHandler = new ForeverHandler(handlerInterrupt);
@@ -216,6 +218,8 @@ public class RemoteEventQueryLogicIT {
         remoteConfig.setMaxConnections(1);
         // only wait 1ms for a thread
         remoteConfig.setConnectionPoolTimeout(1);
+        // disable use of the retry handler
+        remoteConfig.setRetryCount(0);
 
         // patch in the forever handler which will block until its unlocked
         HttpHandler foreverHandler = new ForeverHandler(handlerInterrupt);
