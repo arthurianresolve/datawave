@@ -31,7 +31,7 @@ public class TranslateIdProperties {
     private String beginDate;
     @NotNull
     private String columnVisibility;
-    private Set<String> allowedQueryParameters = new HashSet<>(Arrays.asList(QUERY_PAGESIZE, QUERY_PAGETIMEOUT));
+    private Set<String> allowedQueryParameters = new HashSet<>(Arrays.asList(QueryParameters.QUERY_PAGESIZE, QueryParameters.QUERY_PAGETIMEOUT));
     @NotEmpty
     private String queryLogicName = "IdTranslationQuery";
     @NotEmpty

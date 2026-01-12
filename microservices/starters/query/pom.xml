@@ -29,6 +29,7 @@
         <version.datawave.starter>4.0.5</version.datawave.starter>
         <version.datawave.starter-metadata>3.0.2</version.datawave.starter-metadata>
         <version.datawave.starter-metrics>3.0.3</version.datawave.starter-metrics>
+        <version.datawave.starter-query-common>1.0.0-SNAPSHOT</version.datawave.starter-query-common>
         <version.guava>31.0.1-jre</version.guava>
         <version.slf4j>2.0.12</version.slf4j>
     </properties>
@@ -154,6 +155,11 @@
             </dependency>
             <dependency>
                 <groupId>gov.nsa.datawave.microservice</groupId>
+                <artifactId>spring-boot-starter-datawave-query-common</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>gov.nsa.datawave.microservice</groupId>
                 <artifactId>spring-boot-starter-datawave-query-metric</artifactId>
                 <version>${version.datawave.starter-metrics}</version>
             </dependency>
@@ -188,6 +194,10 @@
         <dependency>
             <groupId>gov.nsa.datawave.microservice</groupId>
             <artifactId>spring-boot-starter-datawave-metadata</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>gov.nsa.datawave.microservice</groupId>
+            <artifactId>spring-boot-starter-datawave-query-common</artifactId>
         </dependency>
         <dependency>
             <groupId>gov.nsa.datawave.microservice</groupId>
