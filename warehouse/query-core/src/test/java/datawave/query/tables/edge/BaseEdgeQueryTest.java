@@ -1,5 +1,9 @@
 package datawave.query.tables.edge;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,8 +33,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.TaskAttemptID;
 import org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl;
 import org.apache.log4j.Logger;
-import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 
 import datawave.accumulo.inmemory.InMemoryAccumuloClient;
 import datawave.accumulo.inmemory.InMemoryInstance;
@@ -68,7 +71,7 @@ public abstract class BaseEdgeQueryTest {
     protected static final String UNEXPECTED_RECORD = "Found an unexpected record.";
 
     private String serializeAuths(Set<Authorizations> sentAuths) {
-        Assert.assertEquals(1, sentAuths.size());
+        assertEquals(1, sentAuths.size());
         return sentAuths.iterator().next().serialize();
     }
 
@@ -163,21 +166,21 @@ public abstract class BaseEdgeQueryTest {
 
                     logic = (BaseQueryLogic<Map.Entry<Key,Value>>) factory.getQueryLogic(logic.getLogicName());
                 } catch (CloneNotSupportedException | QueryException e) {
-                    Assert.fail("Failed to recreate checkpointable query logic  for " + logic.getLogicName() + ": " + e.getMessage());
+                    fail("Failed to recreate checkpointable query logic  for " + logic.getLogicName() + ": " + e.getMessage());
                 }
                 // now reset the logic given the checkpoint
                 try {
                     ((CheckpointableQueryLogic) logic).setupQuery(client, config, cp);
                 } catch (Exception e) {
                     log.error("Failed to setup query given last checkpoint", e);
-                    Assert.fail("Failed to setup query given last checkpoint: " + e.getMessage());
+                    fail("Failed to setup query given last checkpoint: " + e.getMessage());
                 }
                 Iterator<Map.Entry<Key,Value>> iter = logic.iterator();
                 if (iter.hasNext()) {
                     Map.Entry<Key,Value> next = iter.next();
                     Key k = next.getKey();
                     System.out.println("key = " + k.toStringNoTime());
-                    Assert.assertTrue(UNEXPECTED_RECORD + " : " + k.toStringNoTime(), expected.contains(k.toStringNoTime()));
+                    assertTrue(expected.contains(k.toStringNoTime()), UNEXPECTED_RECORD + " : " + k.toStringNoTime());
                     recordsFound++;
                     cps.addAll(((CheckpointableQueryLogic) logic).checkpoint(queryKey));
                 }
@@ -187,12 +190,12 @@ public abstract class BaseEdgeQueryTest {
                 foundKeys.add(entry.getKey());
                 Key k = entry.getKey();
                 System.out.println("key = " + k.toStringNoTime());
-                Assert.assertTrue(UNEXPECTED_RECORD + " : " + k.toStringNoTime(), expected.contains(k.toStringNoTime()));
+                assertTrue(expected.contains(k.toStringNoTime()), UNEXPECTED_RECORD + " : " + k.toStringNoTime());
                 recordsFound++;
             }
         }
 
-        Assert.assertEquals(UNEXPECTED_NUM_RECORDS, expected.size(), recordsFound);
+        assertEquals(expected.size(), recordsFound, UNEXPECTED_NUM_RECORDS);
     }
 
     public static void addEdges() throws IOException, InterruptedException {
@@ -214,7 +217,7 @@ public abstract class BaseEdgeQueryTest {
         recordWriter.close(context);
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         System.setProperty("file.encoding", "UTF8");
