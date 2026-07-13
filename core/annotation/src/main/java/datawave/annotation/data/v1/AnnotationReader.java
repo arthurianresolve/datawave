@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import datawave.annotation.protobuf.v1.Annotation;
+import datawave.annotation.protobuf.v1.AnnotationSource;
 
 /**
  * Read-only contract for annotation data stores.
@@ -13,6 +14,15 @@ import datawave.annotation.protobuf.v1.Annotation;
  * source id. Methods return empty results when no matching data is visible to the implementation.
  */
 public interface AnnotationReader {
+
+    /**
+     * Retrieves the annotation source identified by its analytic hash.
+     *
+     * @param analyticHash
+     *            the analytic hash assigned to the source
+     * @return the matching annotation source, or {@link Optional#empty()} when it is not found
+     */
+    Optional<AnnotationSource> getAnnotationSource(String analyticHash);
 
     /**
      * Retrieves a single annotation for a document when both the annotation type and annotation id are known.

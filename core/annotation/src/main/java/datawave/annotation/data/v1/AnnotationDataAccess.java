@@ -49,7 +49,7 @@ import datawave.security.util.ScannerHelper;
  * {@code uid}, and annotation type, separated by {@link #NULL}. Column qualifiers begin with the annotation id, which allows scans to target either a known
  * annotation type or all types for a document. Annotation sources are stored separately and addressed by analytic hash.
  */
-public class AnnotationDataAccess implements AnnotationReader, AnnotationWriter, AnnotationSourceReader, AnnotationSourceWriter {
+public class AnnotationDataAccess implements AnnotationReader, AnnotationWriter {
 
     public static final char NULL = '\u0000';
     public static final char MAX = '\uFFFF';

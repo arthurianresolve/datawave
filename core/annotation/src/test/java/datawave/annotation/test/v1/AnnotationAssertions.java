@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +45,35 @@ public class AnnotationAssertions {
         if (!testMetadata.isEmpty()) {
             fail("did not see expected metadata entries " + testMetadata);
         }
+    }
+
+    public static void assertAnnotationListsEqual(List<Annotation> expectedAnnotationsTemplate, List<Annotation> actualAnnotations) {
+        // must be mutable, don't change what's passed in.
+        List<Annotation> expectedAnnotations = new ArrayList<>(expectedAnnotationsTemplate);
+        assertEquals(expectedAnnotations.size(), actualAnnotations.size());
+        Set<Annotation> unexpectedAnnotations = new HashSet<>();
+        for (Annotation target : actualAnnotations) {
+            boolean found = false;
+            for (Annotation source : expectedAnnotations) {
+                if (target.getAnnotationId().equals(source.getAnnotationId())) {
+                    assertAnnotationsEqual(source, target);
+                    expectedAnnotations.remove(source);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                unexpectedAnnotations.add(target);
+            }
+        }
+        final StringBuilder errors = new StringBuilder();
+        if (!expectedAnnotations.isEmpty()) {
+            errors.append("Did not observe all expected anntations, missed: ").append(expectedAnnotations).append("; ");
+        }
+        if (!unexpectedAnnotations.isEmpty()) {
+            errors.append("Observed unexpected anntations, saw: ").append(expectedAnnotations).append("; ");
+        }
+        assertEquals(0, errors.length(), errors.toString());
     }
 
     public static void assertAnnotationsEqual(Annotation t, Annotation a) {
